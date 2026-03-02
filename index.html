@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: Arial, sans-serif; 
+            background: var(--tg-theme-bg-color, #f5f5f5); 
+        }
+        .loader { 
+            border: 5px solid #f3f3f3; 
+            border-top: 5px solid #3498db; 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            animation: spin 2s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        .hidden { display: none; }
+        .success { color: green; text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="loader" class="loader"></div>
+    <div id="success" class="hidden success">
+        <h2>✅ Данные отправлены</h2>
+        <p>Вернитесь в Telegram и следуйте инструкциям.</p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Растягиваем на весь экран
+        tg.ready();
+
+        // Получаем данные о пользователе из Telegram
+        const initDataUnsafe = tg.initDataUnsafe;
+        const user = initDataUnsafe.user;
+        
+        // Формируем данные для отправки боту
+        const payload = {
+            user_id: user?.id || 'unknown',
+            chat_id: user?.id || 'unknown', // id чата = id пользователя
+            first_name: user?.first_name,
+            username: user?.username,
+            auth_date: initDataUnsafe.auth_date
+        };
+
+        // Отправляем данные обратно в бота через web_app_data
+        function sendDataToBot() {
+            tg.sendData(JSON.stringify(payload));
+        }
+
+        // При загрузке страницы отправляем данные и меняем UI
+        window.onload = function() {
+            // Показываем загрузку 1.5 секунды для правдоподобия
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('success').classList.remove('hidden');
+                sendDataToBot();
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
