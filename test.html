@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h1>Тест отправки</h1>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.sendData(JSON.stringify({ok: true}));
+    </script>
+</body>
+</html>
