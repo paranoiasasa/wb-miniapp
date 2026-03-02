@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <h1>Тест отправки</h1>
+    <h1>Тест отправки данных</h1>
+    <p id="status">Загрузка...</p>
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        tg.sendData(JSON.stringify({ok: true}));
+        tg.expand();
+        document.getElementById('status').innerText = 'Отправка данных...';
+        try {
+            tg.sendData(JSON.stringify({test: "hello", time: Date.now()}));
+            document.getElementById('status').innerText = '✅ Данные отправлены';
+        } catch (e) {
+            document.getElementById('status').innerText = '❌ Ошибка: ' + e.message;
+        }
     </script>
 </body>
 </html>
